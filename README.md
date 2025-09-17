@@ -38,6 +38,32 @@ REGION_CODE = "KR"
 ```
 On Streamlit Cloud, set these in the app's Secrets UI (same keys), no file commit needed.
 
+## Authentication (optional)
+You can enable login using `streamlit-authenticator` controlled by secrets.
+
+1. Install dependency (already in requirements): `streamlit-authenticator`
+2. Turn on authentication in `.streamlit/secrets.toml` and add credentials:
+   ```toml
+   AUTH_ENABLED = true
+   AUTH_COOKIE_NAME = "yt_trend_auth"
+   AUTH_COOKIE_KEY = "CHANGE_ME_SECRET"
+   AUTH_COOKIE_EXPIRES_DAYS = 7
+
+   [credentials]
+     [credentials.usernames.jdoe]
+     email = "jdoe@example.com"
+     name = "John Doe"
+     password = "$2b$12$REPLACE_WITH_BCRYPT_HASH"
+   ```
+3. Password hashing: Use `streamlit-authenticator`'s Hasher to generate bcrypt hashes.
+   Example in a Python shell:
+   ```python
+   import streamlit_authenticator as stauth
+   hashed = stauth.Hasher(["your_password"]).generate()
+   print(hashed[0])
+   ```
+4. When `AUTH_ENABLED=true`, 앱은 로그인 화면이 먼저 표시되고, 성공 시 사이드바에 로그아웃 버튼이 노출됩니다.
+
 ## Versioning Policy
 This project follows Semantic Versioning (SemVer): `MAJOR.MINOR.PATCH`.
 - `MAJOR`: incompatible API changes or large UI/UX changes
